@@ -705,39 +705,59 @@ section {
   margin-top: 8px;
 }
 
-/* The actual US map image — inverted to white, faded */
+/* The actual US map image — inverted to white, semi-transparent */
 .map-visual__img {
   position: absolute;
   top: 50%;
   left: 50%;
-  /* shift left so Michigan/Detroit sits near center of the card */
+  /* shift so Michigan/Detroit sits near center of the card */
   transform: translate(-62%, -52%);
   height: 95%;
   width: auto;
-  opacity: 0.15;
+  opacity: 0.12;
   filter: invert(1) brightness(2);
   pointer-events: none;
   -webkit-user-select: none;
   user-select: none;
 }
 
-/* Teal radius circle — covers ~50% of the visible US */
+/* Shared radius circle base */
 .map-visual__radius {
   position: absolute;
   top: 42%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 160px;
-  height: 160px;
   border-radius: 50%;
-  border: 1.5px dashed var(--color-teal);
-  background: rgba(45, 212, 168, 0.06);
-  animation: radiusPulse 3s ease-in-out infinite;
+  pointer-events: none;
 }
 
-@keyframes radiusPulse {
-  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.04); }
+/* 2-day reach — larger, softer */
+.map-visual__radius--2day {
+  width: 240px;
+  height: 240px;
+  transform: translate(-50%, -50%);
+  border: 1px dashed rgba(45, 212, 168, 0.3);
+  background: rgba(45, 212, 168, 0.03);
+  animation: radiusPulse2 4s ease-in-out infinite;
+}
+
+/* 1-day reach — smaller, brighter */
+.map-visual__radius--1day {
+  width: 130px;
+  height: 130px;
+  transform: translate(-50%, -50%);
+  border: 1.5px dashed var(--color-teal);
+  background: rgba(45, 212, 168, 0.07);
+  animation: radiusPulse1 3s ease-in-out infinite;
+}
+
+@keyframes radiusPulse1 {
+  0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.03); }
+}
+
+@keyframes radiusPulse2 {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.02); }
 }
 
 /* Detroit glowing dot */
@@ -751,6 +771,7 @@ section {
   background: var(--color-teal);
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(45, 212, 168, 0.7), 0 0 24px rgba(45, 212, 168, 0.3);
+  z-index: 2;
 }
 
 .map-visual__dot-label {
@@ -764,18 +785,42 @@ section {
   letter-spacing: 0.15em;
   font-weight: 600;
   white-space: nowrap;
+  z-index: 2;
 }
 
-.map-visual__label {
+/* Legend at the bottom */
+.map-visual__legend {
   position: absolute;
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+  z-index: 2;
+}
+
+.map-visual__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--color-teal);
-  white-space: nowrap;
+  font-size: 0.625rem;
+  color: rgba(255, 255, 255, 0.55);
   letter-spacing: 0.05em;
+}
+
+.map-visual__legend-swatch {
+  width: 14px;
+  height: 0;
+  display: inline-block;
+}
+
+.map-visual__legend-swatch--1day {
+  border-top: 1.5px dashed var(--color-teal);
+}
+
+.map-visual__legend-swatch--2day {
+  border-top: 1px dashed rgba(45, 212, 168, 0.4);
 }
 
 /* ---------- METRICS SECTION ---------- */

@@ -186,17 +186,45 @@
 
       if (!allValid) return;
 
-      // Show success state
-      var formContent = form.querySelector('.form-grid');
-      var submitSection = form.querySelector('.form__submit');
-      var successMessage = form.querySelector('.form-success');
+      // Disable submit button while sending
+      var submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+      }
 
-      if (formContent) formContent.style.display = 'none';
-      if (submitSection) submitSection.style.display = 'none';
-      if (successMessage) successMessage.classList.add('active');
+      // Send to Formspree (replace YOUR_FORM_ID with your actual Formspree form ID)
+      // Sign up free at https://formspree.io, create a form, and paste the ID below
+      var FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 
-      // Log data for integration
-      console.log('MFS Application Submitted:', data);
+      fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(function (response) {
+        if (response.ok) {
+          // Show success state
+          var formContent = form.querySelector('.form-grid');
+          var submitSection = form.querySelector('.form__submit');
+          var noteSection = form.querySelector('.form__note');
+          var successMessage = form.querySelector('.form-success');
+
+          if (formContent) formContent.style.display = 'none';
+          if (submitSection) submitSection.style.display = 'none';
+          if (noteSection) noteSection.style.display = 'none';
+          if (successMessage) successMessage.classList.add('active');
+        } else {
+          throw new Error('Submission failed');
+        }
+      })
+      .catch(function () {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Application';
+        }
+        alert('Something went wrong. Please try again or email us directly.');
+      });
     });
   }
 

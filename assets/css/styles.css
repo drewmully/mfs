@@ -703,72 +703,72 @@ section {
   border-radius: var(--radius-md);
   overflow: hidden;
   margin-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.map-visual__svg {
-  width: 100%;
-  height: 100%;
+/* The actual US map image — inverted to white, faded */
+.map-visual__img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* shift left so Michigan/Detroit sits near center of the card */
+  transform: translate(-62%, -52%);
+  height: 95%;
+  width: auto;
+  opacity: 0.15;
+  filter: invert(1) brightness(2);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-.map-visual__land {
-  fill: rgba(255, 255, 255, 0.08);
-  stroke: rgba(255, 255, 255, 0.18);
-  stroke-width: 1.5;
-}
-
-.map-visual__land--mi {
-  fill: rgba(45, 212, 168, 0.15);
-  stroke: rgba(45, 212, 168, 0.35);
-}
-
-.map-visual__radius-circle {
-  fill: rgba(45, 212, 168, 0.07);
-  stroke: var(--color-teal);
-  stroke-width: 1.5;
-  stroke-dasharray: 6 4;
+/* Teal radius circle — covers ~50% of the visible US */
+.map-visual__radius {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 1.5px dashed var(--color-teal);
+  background: rgba(45, 212, 168, 0.06);
   animation: radiusPulse 3s ease-in-out infinite;
-  transform-origin: 668px 215px;
 }
 
 @keyframes radiusPulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.04); }
 }
 
-.map-visual__glow {
-  fill: rgba(45, 212, 168, 0.25);
-  animation: glowPulse 2.5s ease-in-out infinite;
+/* Detroit glowing dot */
+.map-visual__dot {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: var(--color-teal);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(45, 212, 168, 0.7), 0 0 24px rgba(45, 212, 168, 0.3);
 }
 
-.map-visual__glow--outer {
-  fill: rgba(45, 212, 168, 0.08);
-  animation-delay: 0.3s;
-}
-
-@keyframes glowPulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.8; }
-}
-
-.map-visual__marker {
-  fill: var(--color-teal);
-  filter: drop-shadow(0 0 6px rgba(45, 212, 168, 0.8));
-}
-
-.map-visual__city-label {
-  fill: var(--color-teal);
+.map-visual__dot-label {
+  position: absolute;
+  top: calc(42% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.55rem;
+  color: var(--color-teal);
   letter-spacing: 0.15em;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .map-visual__label {
   position: absolute;
-  bottom: 12px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--font-mono);

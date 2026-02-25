@@ -266,63 +266,10 @@
 
           <!-- Map Visual -->
           <div class="map-visual">
-            <svg class="map-visual__svg" viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg">
-              <!-- Continental US outline (simplified) -->
-              <path class="map-visual__land" d="
-                M170,130 L195,128 L220,120 L240,115 L250,120 L260,115
-                L290,108 L320,105 L345,102 L370,100 L400,98 L430,97
-                L460,96 L490,95 L520,95 L548,96 L575,98 L600,100
-                L620,105 L640,110 L650,108 L660,115 L670,112
-                L690,115 L705,120 L718,128 L728,135 L740,142
-                L748,150 L755,160 L760,170 L768,180 L778,188
-                L790,195 L798,205 L800,220 L798,235 L800,248
-                L810,260 L818,272 L822,285 L818,298 L812,310
-                L808,325 L818,338 L828,348 L838,360 L842,375
-                L838,390 L830,400 L825,415 L830,425 L838,435
-                L840,448 L835,458 L828,468 L818,478 L805,485
-                L792,490 L778,492 L765,498 L752,505 L738,510
-                L722,512 L705,515 L688,518 L670,518 L652,520
-                L635,522 L618,525 L600,528 L582,530 L565,530
-                L548,528 L530,525 L512,522 L495,520 L478,525
-                L462,530 L448,535 L432,530 L418,525 L405,520
-                L390,518 L375,522 L360,528 L345,525 L330,518
-                L318,510 L305,505 L290,508 L275,512 L260,508
-                L248,500 L235,495 L222,500 L210,510 L198,518
-                L185,512 L175,505 L168,495 L158,488 L148,480
-                L140,468 L135,455 L128,442 L122,428 L118,412
-                L115,395 L110,378 L108,360 L105,342 L105,325
-                L108,308 L112,290 L115,272 L118,258 L122,242
-                L128,225 L132,210 L138,195 L145,180 L152,168
-                L160,155 L165,142 L170,130 Z
-              "/>
-
-              <!-- Michigan lower peninsula -->
-              <path class="map-visual__land map-visual__land--mi" d="
-                M640,110 L645,125 L650,140 L658,155 L668,168
-                L678,178 L685,190 L688,200 L685,212 L678,222
-                L668,228 L655,230 L645,225 L638,215 L632,205
-                L628,192 L625,178 L622,165 L620,150 L622,138
-                L628,125 L635,115 L640,110 Z
-              "/>
-              <!-- Michigan upper peninsula -->
-              <path class="map-visual__land map-visual__land--mi" d="
-                M590,118 L600,112 L612,108 L625,112 L635,115
-                L628,122 L618,125 L608,122 L598,120 L590,118 Z
-              "/>
-
-              <!-- 1-day shipping radius circle centered on Detroit -->
-              <circle class="map-visual__radius-circle" cx="668" cy="215" r="195"/>
-
-              <!-- Detroit marker glow -->
-              <circle class="map-visual__glow" cx="668" cy="215" r="14"/>
-              <circle class="map-visual__glow map-visual__glow--outer" cx="668" cy="215" r="26"/>
-
-              <!-- Detroit dot -->
-              <circle class="map-visual__marker" cx="668" cy="215" r="5"/>
-
-              <!-- Detroit label -->
-              <text class="map-visual__city-label" x="668" y="245" text-anchor="middle">DETROIT</text>
-            </svg>
+            <img class="map-visual__img" src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg" alt="US Map" draggable="false">
+            <div class="map-visual__radius"></div>
+            <div class="map-visual__dot"></div>
+            <span class="map-visual__dot-label">DETROIT</span>
             <span class="map-visual__label">50%+ of US reachable in 1 day</span>
           </div>
         </div>

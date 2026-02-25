@@ -695,9 +695,16 @@ section {
 }
 
 /* Map Visual */
+/* ---- Detroit position on the blank US SVG (959x593 viewBox) ----
+   Detroit ≈ x:77%, y:34% of the SVG.
+   We display the map at width:100% of the card so the whole US is
+   visible, then place dot + circles at the matching card-relative
+   percentages.  CSS custom properties keep everything in sync. */
 .map-visual {
+  --detroit-x: 77%;
+  --detroit-y: 34%;
   position: relative;
-  height: 200px;
+  height: 220px;
   background: var(--color-charcoal);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-md);
@@ -705,45 +712,44 @@ section {
   margin-top: 8px;
 }
 
-/* The actual US map image — inverted to white, semi-transparent */
+/* Full-width US map — inverted to white, semi-transparent */
 .map-visual__img {
   position: absolute;
   top: 50%;
   left: 50%;
-  /* shift so Michigan/Detroit sits near center of the card */
-  transform: translate(-62%, -52%);
-  height: 95%;
-  width: auto;
-  opacity: 0.12;
+  transform: translate(-50%, -55%);
+  width: 100%;
+  height: auto;
+  opacity: 0.13;
   filter: invert(1) brightness(2);
   pointer-events: none;
   -webkit-user-select: none;
   user-select: none;
 }
 
-/* Shared radius circle base */
+/* Shared radius circle base — anchored to Detroit */
 .map-visual__radius {
   position: absolute;
-  top: 42%;
-  left: 50%;
+  top: var(--detroit-y);
+  left: var(--detroit-x);
   border-radius: 50%;
   pointer-events: none;
 }
 
-/* 2-day reach — larger, softer */
+/* 2-day reach — covers the full continental US from Detroit */
 .map-visual__radius--2day {
-  width: 240px;
-  height: 240px;
+  width: 360px;
+  height: 360px;
   transform: translate(-50%, -50%);
   border: 1px dashed rgba(45, 212, 168, 0.3);
   background: rgba(45, 212, 168, 0.03);
   animation: radiusPulse2 4s ease-in-out infinite;
 }
 
-/* 1-day reach — smaller, brighter */
+/* 1-day reach — covers ~50% of the US from Detroit */
 .map-visual__radius--1day {
-  width: 130px;
-  height: 130px;
+  width: 160px;
+  height: 160px;
   transform: translate(-50%, -50%);
   border: 1.5px dashed var(--color-teal);
   background: rgba(45, 212, 168, 0.07);
@@ -763,8 +769,8 @@ section {
 /* Detroit glowing dot */
 .map-visual__dot {
   position: absolute;
-  top: 42%;
-  left: 50%;
+  top: var(--detroit-y);
+  left: var(--detroit-x);
   transform: translate(-50%, -50%);
   width: 10px;
   height: 10px;
@@ -776,8 +782,8 @@ section {
 
 .map-visual__dot-label {
   position: absolute;
-  top: calc(42% + 14px);
-  left: 50%;
+  top: calc(var(--detroit-y) + 14px);
+  left: var(--detroit-x);
   transform: translateX(-50%);
   font-family: var(--font-mono);
   font-size: 0.55rem;

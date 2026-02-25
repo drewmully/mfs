@@ -144,14 +144,15 @@
     var container = document.querySelector('.hero__particles');
     if (!container) return;
 
-    for (var i = 0; i < 30; i++) {
+    for (var i = 0; i < 40; i++) {
       var particle = document.createElement('div');
       particle.classList.add('hero__particle');
       particle.style.left = Math.random() * 100 + '%';
-      particle.style.animationDelay = Math.random() * 8 + 's';
-      particle.style.animationDuration = (6 + Math.random() * 6) + 's';
-      particle.style.width = (1 + Math.random() * 2) + 'px';
-      particle.style.height = particle.style.width;
+      particle.style.animationDelay = Math.random() * 10 + 's';
+      particle.style.animationDuration = (7 + Math.random() * 8) + 's';
+      var size = (2 + Math.random() * 4) + 'px';
+      particle.style.width = size;
+      particle.style.height = size;
       container.appendChild(particle);
     }
   }

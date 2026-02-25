@@ -313,19 +313,21 @@ section {
 
 .hero__particle {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: 2px;
+  height: 2px;
   background: var(--color-teal);
   border-radius: 50%;
   opacity: 0;
+  box-shadow: 0 0 6px 2px rgba(45, 212, 168, 0.4), 0 0 12px 4px rgba(45, 212, 168, 0.15);
   animation: particleFloat 8s infinite;
 }
 
 @keyframes particleFloat {
-  0% { opacity: 0; transform: translateY(100vh) scale(1); }
-  10% { opacity: 0.6; }
-  90% { opacity: 0.6; }
-  100% { opacity: 0; transform: translateY(-20vh) scale(0); }
+  0% { opacity: 0; transform: translateY(100vh) scale(0.8); }
+  10% { opacity: 0.8; }
+  50% { opacity: 1; }
+  90% { opacity: 0.7; }
+  100% { opacity: 0; transform: translateY(-20vh) scale(0.2); }
 }
 
 .hero__content {

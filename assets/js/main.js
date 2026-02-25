@@ -195,7 +195,7 @@
 
       // Send to Formspree (replace YOUR_FORM_ID with your actual Formspree form ID)
       // Sign up free at https://formspree.io, create a form, and paste the ID below
-      var FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+      var FORMSPREE_ENDPOINT = 'https://formspree.io/f/mvzblonl';
 
       fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',

@@ -695,11 +695,10 @@ section {
 }
 
 /* Map Visual */
-/* ---- Detroit position on the blank US SVG (959x593 viewBox) ----
-   Detroit ≈ x:77%, y:34% of the SVG.
-   We display the map at width:100% of the card so the whole US is
-   visible, then place dot + circles at the matching card-relative
-   percentages.  CSS custom properties keep everything in sync. */
+/* ---- Map visual ----
+   Map is width:100% so the full US is visible.  Detroit sits at
+   ~77% x / ~34% y on the SVG.  Circle sizes use % of the card
+   width so they scale on every screen size. */
 .map-visual {
   --detroit-x: 77%;
   --detroit-y: 34%;
@@ -733,26 +732,25 @@ section {
   top: var(--detroit-y);
   left: var(--detroit-x);
   border-radius: 50%;
+  aspect-ratio: 1;
   pointer-events: none;
 }
 
 /* 2-day reach — covers the full continental US from Detroit */
 .map-visual__radius--2day {
-  width: 360px;
-  height: 360px;
+  width: 150%;
   transform: translate(-50%, -50%);
-  border: 1px dashed rgba(45, 212, 168, 0.3);
-  background: rgba(45, 212, 168, 0.03);
+  border: 1px dashed rgba(45, 212, 168, 0.25);
+  background: rgba(45, 212, 168, 0.025);
   animation: radiusPulse2 4s ease-in-out infinite;
 }
 
-/* 1-day reach — covers ~50% of the US from Detroit */
+/* 1-day reach — covers most of the US from Detroit */
 .map-visual__radius--1day {
-  width: 160px;
-  height: 160px;
+  width: 105%;
   transform: translate(-50%, -50%);
   border: 1.5px dashed var(--color-teal);
-  background: rgba(45, 212, 168, 0.07);
+  background: rgba(45, 212, 168, 0.06);
   animation: radiusPulse1 3s ease-in-out infinite;
 }
 

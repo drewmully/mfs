@@ -57,6 +57,10 @@ html {
   font-size: 16px;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   font-family: var(--font-primary);
   background: var(--color-black);

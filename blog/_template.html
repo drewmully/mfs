@@ -3,18 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MFS Blog — Insights on eCommerce fulfillment, 3PL operations, shipping strategy, and scaling DTC brands from the founder-run team at Mully Fulfillment Services.">
+  <meta name="description" content="{{META_DESCRIPTION}}">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://mullyfulfillment.com/blog/">
-  <title>Blog — MFS | eCommerce Fulfillment Insights</title>
+  <link rel="canonical" href="https://mullyfulfillment.com/blog/{{SLUG}}">
+  <title>{{TITLE}} | MFS Blog</title>
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://mullyfulfillment.com/blog/">
-  <meta property="og:title" content="MFS Blog — eCommerce Fulfillment Insights">
-  <meta property="og:description" content="Insights on 3PL operations, shipping strategy, and scaling DTC brands from Detroit's founder-run fulfillment team.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://mullyfulfillment.com/blog/{{SLUG}}">
+  <meta property="og:title" content="{{TITLE}}">
+  <meta property="og:description" content="{{META_DESCRIPTION}}">
   <meta property="og:image" content="https://cdn.shopify.com/s/files/1/0561/0530/4256/files/ChatGPT_Image_Feb_25_2026_03_59_45_PM.png?v=1772053194">
   <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{TITLE}}",
+    "description": "{{META_DESCRIPTION}}",
+    "datePublished": "{{DATE}}",
+    "dateModified": "{{DATE}}",
+    "author": { "@type": "Organization", "name": "MFS — Mully Fulfillment Services", "url": "https://mullyfulfillment.com" },
+    "publisher": { "@type": "Organization", "name": "MFS — Mully Fulfillment Services", "url": "https://mullyfulfillment.com" },
+    "mainEntityOfPage": "https://mullyfulfillment.com/blog/{{SLUG}}"
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +38,6 @@
 </head>
 <body>
 
-  <!-- Navigation -->
   <nav class="nav nav--scrolled" role="navigation" aria-label="Main navigation">
     <div class="container">
       <div class="nav__inner">
@@ -53,25 +65,38 @@
     <a href="/#apply" class="btn btn--primary">Apply Now</a>
   </div>
 
-  <!-- Blog Header -->
-  <section class="blog-header">
+  <article class="blog-article">
     <div class="container">
-      <span class="label">Blog</span>
-      <h1>Fulfillment <span style="color: var(--color-teal)">Insights.</span></h1>
-      <p>Operational knowledge from a team that ships thousands of orders every week.</p>
-    </div>
-  </section>
 
-  <!-- Blog Posts Grid -->
-  <section class="blog-listing">
-    <div class="container">
-      <div class="blog-grid" id="blog-grid">
-        <!-- Posts loaded dynamically from posts.json -->
+      <header class="blog-article__header">
+        <span class="label">{{TAG}}</span>
+        <h1>{{TITLE}}</h1>
+        <div class="blog-article__meta">
+          <span>{{DATE_DISPLAY}}</span>
+          <span>{{READ_TIME}} min read</span>
+          <span>By the MFS Team</span>
+        </div>
+      </header>
+
+      <div class="blog-article__body">
+        {{BODY_HTML}}
       </div>
-    </div>
-  </section>
 
-  <!-- Footer -->
+      <div class="blog-cta">
+        <span class="label blog-cta__label">{{CTA_LABEL}}</span>
+        <h3>{{CTA_HEADING}}</h3>
+        <p>{{CTA_TEXT}}</p>
+        <a href="/#apply" class="btn btn--primary btn--large">Apply to Work With MFS</a>
+      </div>
+
+      <div class="blog-nav">
+        <a href="/blog/">&larr; All articles</a>
+        <a href="/">Back to MFS home &rarr;</a>
+      </div>
+
+    </div>
+  </article>
+
   <footer class="footer">
     <div class="container">
       <div class="footer__inner">
@@ -87,29 +112,5 @@
   </footer>
 
   <script src="/assets/js/main.js"></script>
-  <script>
-    fetch('/blog/posts.json')
-      .then(function (r) { return r.json(); })
-      .then(function (posts) {
-        var grid = document.getElementById('blog-grid');
-        posts.sort(function (a, b) { return b.date.localeCompare(a.date); });
-        posts.forEach(function (post) {
-          var d = new Date(post.date + 'T12:00:00');
-          var dateStr = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-          var card = document.createElement('a');
-          card.href = '/blog/' + post.slug;
-          card.className = 'blog-card';
-          card.innerHTML =
-            '<div class="blog-card__meta">' +
-              '<span class="blog-card__date">' + dateStr + '</span>' +
-              '<span class="blog-card__tag">' + post.tag + '</span>' +
-            '</div>' +
-            '<h2 class="blog-card__title">' + post.title + '</h2>' +
-            '<p class="blog-card__excerpt">' + post.excerpt + '</p>' +
-            '<span class="blog-card__read">Read article &rarr;</span>';
-          grid.appendChild(card);
-        });
-      });
-  </script>
 </body>
 </html>

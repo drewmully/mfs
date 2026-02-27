@@ -1,8 +1,15 @@
 [
   {
+    "slug": "99-9-order-accuracy-how-we-do-it",
+    "title": "99.9% Order Accuracy Isn't Luck \u2014 Here's How We Do It",
+    "excerpt": "Order accuracy sounds simple until you are eating the cost of wrong shipments. Here is how MFS maintains 99.9% accuracy at scale.",
+    "date": "2026-02-27",
+    "tag": "Fulfillment"
+  },
+  {
     "slug": "what-to-look-for-in-a-3pl-partner",
     "title": "What to Look for in a 3PL Partner in 2026: A Founder's Guide",
-    "excerpt": "Choosing a 3PL is one of the most important decisions a growing eCommerce brand will make. Here's what actually matters — from a team that's been on both sides.",
+    "excerpt": "Choosing a 3PL is one of the most important decisions a growing eCommerce brand will make. Here's what actually matters \u2014 from a team that's been on both sides.",
     "date": "2026-02-25",
     "tag": "3PL Guide"
   }

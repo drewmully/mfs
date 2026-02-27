@@ -3,6 +3,8 @@ title: "99.9% Order Accuracy Isn't Luck — Here's How We Do It"
 date: 2026-02-27
 meta_description: "A behind-the-scenes look at how MFS maintains 99.9% order accuracy at scale — the systems, habits, and standards that make near-zero errors possible."
 primary_keyword: "order accuracy fulfillment"
+tag: "Fulfillment"
+excerpt: "Order accuracy sounds simple until you are eating the cost of wrong shipments. Here is how MFS maintains 99.9% accuracy at scale."
 ---
 
 ## The Number Most 3PLs Won't Put in Writing

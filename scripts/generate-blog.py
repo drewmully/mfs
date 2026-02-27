@@ -2,27 +2,39 @@
 """
 MFS Daily Blog Post Generator
 Calls the Anthropic API to generate a brand-aligned blog post,
-then saves it as a dated Markdown file in blog/posts/.
+saves the Markdown source, renders an HTML page from the site template,
+and updates the blog index so the post appears on the website.
 """
 
 import os
 import sys
 import json
+import math
 import random
+import re
 from datetime import date
 from pathlib import Path
 
 import anthropic
+import markdown
 
 # ── Config ──────────────────────────────────────────────────────────────────
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
 BRAND_VOICE_PATH = SCRIPT_DIR / "brand-voice.md"
-POSTS_DIR = REPO_ROOT / "blog" / "posts"
+BLOG_DIR = REPO_ROOT / "blog"
+POSTS_DIR = BLOG_DIR / "posts"
+POSTS_JSON = BLOG_DIR / "posts.json"
+TEMPLATE_PATH = BLOG_DIR / "_template.html"
 
 MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 2048
+
+# Default CTA content (consistent across all posts)
+CTA_LABEL = "Ready to Switch?"
+CTA_HEADING = 'See If MFS Is the Right <span style="color: var(--color-teal)">Fit.</span>'
+CTA_TEXT = "We partner with growth-focused eCommerce brands that demand speed, precision, and transparency from their fulfillment operations."
 
 # Topic pool — the script picks one at random each day.
 # Add/remove topics whenever you want to steer the content calendar.
@@ -72,9 +84,14 @@ def pick_topic(today: date) -> str:
 
 
 def already_posted_today(today: date) -> bool:
-    """Check if a post already exists for today."""
-    slug = today.isoformat()  # e.g. 2026-02-27
-    return any(f.name.startswith(slug) for f in POSTS_DIR.glob("*.md"))
+    """Check if a fully published post already exists for today."""
+    slug_prefix = today.isoformat()
+    has_markdown = any(f.name.startswith(slug_prefix) for f in POSTS_DIR.glob("*.md"))
+    if not has_markdown:
+        return False
+    # Also verify it's in posts.json (i.e. fully published)
+    posts = json.loads(POSTS_JSON.read_text()) if POSTS_JSON.exists() else []
+    return any(p["date"] == slug_prefix for p in posts)
 
 
 def generate_post(brand_voice: str, topic: str) -> dict:
@@ -94,6 +111,8 @@ Output ONLY valid JSON with these keys:
 - "title": the blog post title (compelling, SEO-friendly, under 70 chars)
 - "meta_description": under 160 characters, for SEO
 - "primary_keyword": the main SEO keyword targeted
+- "tag": a short category label for the post (1-3 words, e.g. "Fulfillment", "3PL Guide", "Shipping", "DTC Strategy", "Warehouse Ops")
+- "excerpt": a 1-2 sentence teaser for the blog index card (under 200 chars)
 - "body": the full blog post in Markdown (use ## for subheadings, no H1)
 - "slug": a URL-friendly slug derived from the title (lowercase, hyphens, no special chars)
 
@@ -131,12 +150,80 @@ title: "{post['title']}"
 date: {today.isoformat()}
 meta_description: "{post['meta_description']}"
 primary_keyword: "{post['primary_keyword']}"
+tag: "{post.get('tag', 'Fulfillment')}"
+excerpt: "{post.get('excerpt', post['meta_description'])}"
 ---
 
 {post['body']}
 """
     filepath.write_text(content)
     return filepath
+
+
+def format_date_display(today: date) -> str:
+    """Format date for display, e.g. 'February 27, 2026'."""
+    return today.strftime("%B %d, %Y").replace(" 0", " ")
+
+
+def calculate_read_time(text: str) -> int:
+    """Estimate reading time in minutes (assumes ~230 wpm)."""
+    words = len(text.split())
+    return max(1, math.ceil(words / 230))
+
+
+def render_html_page(today: date, post: dict) -> Path:
+    """Render the blog post HTML page from the template."""
+    template = TEMPLATE_PATH.read_text()
+    slug = post.get("slug", "untitled")
+
+    # Convert markdown body to HTML
+    md = markdown.Markdown(extensions=["extra"])
+    body_html = md.convert(post["body"])
+
+    # Fill template placeholders
+    html = template
+    html = html.replace("{{SLUG}}", slug)
+    html = html.replace("{{TITLE}}", post["title"])
+    html = html.replace("{{TAG}}", post.get("tag", "Fulfillment"))
+    html = html.replace("{{DATE}}", today.isoformat())
+    html = html.replace("{{DATE_DISPLAY}}", format_date_display(today))
+    html = html.replace("{{READ_TIME}}", str(calculate_read_time(post["body"])))
+    html = html.replace("{{META_DESCRIPTION}}", post["meta_description"])
+    html = html.replace("{{BODY_HTML}}", body_html)
+    html = html.replace("{{CTA_LABEL}}", CTA_LABEL)
+    html = html.replace("{{CTA_HEADING}}", CTA_HEADING)
+    html = html.replace("{{CTA_TEXT}}", CTA_TEXT)
+
+    # Write to blog/{slug}/index.html
+    page_dir = BLOG_DIR / slug
+    page_dir.mkdir(parents=True, exist_ok=True)
+    page_path = page_dir / "index.html"
+    page_path.write_text(html)
+    return page_path
+
+
+def update_posts_index(today: date, post: dict):
+    """Add the new post to posts.json so it appears on the blog index."""
+    posts = json.loads(POSTS_JSON.read_text()) if POSTS_JSON.exists() else []
+
+    slug = post.get("slug", "untitled")
+
+    # Don't add duplicate entries
+    if any(p["slug"] == slug for p in posts):
+        return
+
+    posts.append({
+        "slug": slug,
+        "title": post["title"],
+        "excerpt": post.get("excerpt", post["meta_description"]),
+        "date": today.isoformat(),
+        "tag": post.get("tag", "Fulfillment"),
+    })
+
+    # Sort newest first
+    posts.sort(key=lambda p: p["date"], reverse=True)
+
+    POSTS_JSON.write_text(json.dumps(posts, indent=2) + "\n")
 
 
 def main():
@@ -161,9 +248,20 @@ def main():
 
     post = generate_post(brand_voice, topic)
 
+    # 1. Save markdown source
     filepath = save_post(today, post)
-    print(f"Saved: {filepath}")
+    print(f"Saved markdown: {filepath}")
+
+    # 2. Render HTML page
+    page_path = render_html_page(today, post)
+    print(f"Rendered HTML:  {page_path}")
+
+    # 3. Update blog index
+    update_posts_index(today, post)
+    print(f"Updated index:  {POSTS_JSON}")
+
     print(f"Title: {post['title']}")
+    print("Post published successfully.")
 
     # Write outputs for GitHub Actions
     github_output = os.environ.get("GITHUB_OUTPUT")

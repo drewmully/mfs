@@ -27,22 +27,44 @@ jobs:
       - name: Install dependencies
         run: pip install anthropic
 
+      - name: Verify setup
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY secret is not set. Go to Settings → Secrets → Actions and add it."
+            exit 1
+          fi
+          if [ ! -f scripts/generate-blog.py ]; then
+            echo "::error::scripts/generate-blog.py not found. Make sure you run this workflow on the correct branch."
+            exit 1
+          fi
+          echo "Setup verified. API key is set, script exists."
+
       - name: Generate blog post
         id: generate
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python scripts/generate-blog.py
+        run: |
+          set -e
+          python scripts/generate-blog.py
+          echo "Blog post generated successfully."
 
       - name: Commit and push new post
         run: |
+          set -e
           git config user.name "MFS Blog Bot"
           git config user.email "blog-bot@mullyfulfillment.com"
           git add blog/posts/
+
           # Only commit if there are changes
           if git diff --cached --quiet; then
-            echo "No new posts to commit."
-          else
-            TITLE="${{ steps.generate.outputs.title }}"
-            git commit -m "blog: ${TITLE:-new daily post}"
-            git push
+            echo "::warning::No new posts to commit. The script may have detected an existing post for today."
+            exit 0
           fi
+
+          # Use a safe commit message (avoid special char issues from title interpolation)
+          DATESTAMP=$(date +%Y-%m-%d)
+          git commit -m "blog: new post for ${DATESTAMP}"
+          git push
+          echo "Post committed and pushed."

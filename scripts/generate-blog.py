@@ -3,7 +3,7 @@
 MFS Daily Blog Post Generator
 Calls the Anthropic API to generate a brand-aligned blog post,
 saves the Markdown source, renders an HTML page from the site template,
-and updates the blog index so the post appears on the website.
+updates the blog index and sitemap so the post appears on the website.
 """
 
 import os
@@ -11,7 +11,6 @@ import sys
 import json
 import math
 import random
-import re
 from datetime import date
 from pathlib import Path
 
@@ -27,9 +26,13 @@ BLOG_DIR = REPO_ROOT / "blog"
 POSTS_DIR = BLOG_DIR / "posts"
 POSTS_JSON = BLOG_DIR / "posts.json"
 TEMPLATE_PATH = BLOG_DIR / "_template.html"
+SITEMAP_PATH = REPO_ROOT / "sitemap.xml"
 
 MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 2048
+
+# Default social sharing image (MFS brand image, 1200x630)
+DEFAULT_OG_IMAGE = "https://cdn.shopify.com/s/files/1/0561/0530/4256/files/Untitled_design_19.png?v=1772057565"
 
 # Default CTA content (consistent across all posts)
 CTA_LABEL = "Ready to Switch?"
@@ -190,6 +193,7 @@ def render_html_page(today: date, post: dict) -> Path:
     html = html.replace("{{READ_TIME}}", str(calculate_read_time(post["body"])))
     html = html.replace("{{META_DESCRIPTION}}", post["meta_description"])
     html = html.replace("{{BODY_HTML}}", body_html)
+    html = html.replace("{{OG_IMAGE}}", DEFAULT_OG_IMAGE)
     html = html.replace("{{CTA_LABEL}}", CTA_LABEL)
     html = html.replace("{{CTA_HEADING}}", CTA_HEADING)
     html = html.replace("{{CTA_TEXT}}", CTA_TEXT)
@@ -226,6 +230,44 @@ def update_posts_index(today: date, post: dict):
     POSTS_JSON.write_text(json.dumps(posts, indent=2) + "\n")
 
 
+def update_sitemap(today: date, post: dict):
+    """Add the new post to sitemap.xml and update lastmod dates."""
+    slug = post.get("slug", "untitled")
+    post_url = f"https://mullyfulfillment.com/blog/{slug}"
+    today_str = today.isoformat()
+
+    # Read existing sitemap
+    if SITEMAP_PATH.exists():
+        content = SITEMAP_PATH.read_text()
+    else:
+        content = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>\n'
+
+    # Don't add duplicate entries
+    if post_url in content:
+        return
+
+    # Build the new <url> entry
+    new_entry = f"""  <url>
+    <loc>{post_url}</loc>
+    <lastmod>{today_str}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>"""
+
+    # Insert before closing </urlset>
+    content = content.replace("</urlset>", f"{new_entry}\n</urlset>")
+
+    # Update blog index lastmod to today
+    import re
+    content = re.sub(
+        r"(<loc>https://mullyfulfillment\.com/blog/</loc>\s*<lastmod>)\d{4}-\d{2}-\d{2}(</lastmod>)",
+        rf"\g<1>{today_str}\2",
+        content,
+    )
+
+    SITEMAP_PATH.write_text(content)
+
+
 def main():
     today = date.today()
 
@@ -259,6 +301,10 @@ def main():
     # 3. Update blog index
     update_posts_index(today, post)
     print(f"Updated index:  {POSTS_JSON}")
+
+    # 4. Update sitemap
+    update_sitemap(today, post)
+    print(f"Updated sitemap: {SITEMAP_PATH}")
 
     print(f"Title: {post['title']}")
     print("Post published successfully.")

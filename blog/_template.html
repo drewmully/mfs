@@ -12,8 +12,16 @@
   <meta property="og:url" content="https://mullyfulfillment.com/blog/{{SLUG}}">
   <meta property="og:title" content="{{TITLE}}">
   <meta property="og:description" content="{{META_DESCRIPTION}}">
-  <meta property="og:image" content="https://cdn.shopify.com/s/files/1/0561/0530/4256/files/ChatGPT_Image_Feb_25_2026_03_59_45_PM.png?v=1772053194">
+  <meta property="og:image" content="{{OG_IMAGE}}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="MFS — Mully Fulfillment Services">
+  <meta property="og:locale" content="en_US">
+
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{TITLE}}">
+  <meta name="twitter:description" content="{{META_DESCRIPTION}}">
+  <meta name="twitter:image" content="{{OG_IMAGE}}">
 
   <script type="application/ld+json">
   {
@@ -21,10 +29,11 @@
     "@type": "Article",
     "headline": "{{TITLE}}",
     "description": "{{META_DESCRIPTION}}",
+    "image": "{{OG_IMAGE}}",
     "datePublished": "{{DATE}}",
     "dateModified": "{{DATE}}",
     "author": { "@type": "Organization", "name": "MFS — Mully Fulfillment Services", "url": "https://mullyfulfillment.com" },
-    "publisher": { "@type": "Organization", "name": "MFS — Mully Fulfillment Services", "url": "https://mullyfulfillment.com" },
+    "publisher": { "@type": "Organization", "name": "MFS — Mully Fulfillment Services", "url": "https://mullyfulfillment.com", "logo": { "@type": "ImageObject", "url": "{{OG_IMAGE}}" } },
     "mainEntityOfPage": "https://mullyfulfillment.com/blog/{{SLUG}}"
   }
   </script>

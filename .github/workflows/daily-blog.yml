@@ -54,7 +54,7 @@ jobs:
           set -e
           git config user.name "MFS Blog Bot"
           git config user.email "blog-bot@mullyfulfillment.com"
-          git add blog/
+          git add blog/ sitemap.xml
 
           # Only commit if there are changes
           if git diff --cached --quiet; then

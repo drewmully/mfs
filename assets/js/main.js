@@ -229,12 +229,81 @@
     });
   }
 
+  /* ---------- Case Studies Carousel ---------- */
+  function initCarousel() {
+    var carousel = document.querySelector('.carousel');
+    if (!carousel) return;
+
+    var track = carousel.querySelector('.carousel__track');
+    var slides = carousel.querySelectorAll('.carousel__slide');
+    var prevBtn = carousel.querySelector('.carousel__btn--prev');
+    var nextBtn = carousel.querySelector('.carousel__btn--next');
+    var dotsContainer = carousel.querySelector('.carousel__dots');
+    var current = 0;
+    var total = slides.length;
+
+    // Build dot indicators
+    for (var i = 0; i < total; i++) {
+      var dot = document.createElement('button');
+      dot.className = 'carousel__dot' + (i === 0 ? ' carousel__dot--active' : '');
+      dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      dot.setAttribute('data-index', i);
+      dotsContainer.appendChild(dot);
+    }
+    var dots = dotsContainer.querySelectorAll('.carousel__dot');
+
+    function goTo(index) {
+      if (index < 0) index = total - 1;
+      if (index >= total) index = 0;
+      current = index;
+      track.style.transform = 'translateX(-' + (current * 100) + '%)';
+      dots.forEach(function (d, di) {
+        d.classList.toggle('carousel__dot--active', di === current);
+      });
+    }
+
+    prevBtn.addEventListener('click', function () { goTo(current - 1); });
+    nextBtn.addEventListener('click', function () { goTo(current + 1); });
+
+    dotsContainer.addEventListener('click', function (e) {
+      var dot = e.target.closest('.carousel__dot');
+      if (dot) goTo(parseInt(dot.getAttribute('data-index'), 10));
+    });
+
+    // Touch / swipe support
+    var startX = 0;
+    var dragging = false;
+
+    track.addEventListener('touchstart', function (e) {
+      startX = e.touches[0].clientX;
+      dragging = true;
+    }, { passive: true });
+
+    track.addEventListener('touchend', function (e) {
+      if (!dragging) return;
+      dragging = false;
+      var diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        goTo(diff > 0 ? current + 1 : current - 1);
+      }
+    });
+
+    // Auto-advance every 6 seconds, pause on hover
+    var autoplay = setInterval(function () { goTo(current + 1); }, 6000);
+
+    carousel.addEventListener('mouseenter', function () { clearInterval(autoplay); });
+    carousel.addEventListener('mouseleave', function () {
+      autoplay = setInterval(function () { goTo(current + 1); }, 6000);
+    });
+  }
+
   /* ---------- Init All ---------- */
   function init() {
     initReveal();
     initCounters();
     initParticles();
     initForm();
+    initCarousel();
   }
 
   if (document.readyState === 'loading') {

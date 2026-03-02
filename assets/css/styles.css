@@ -949,23 +949,81 @@ section {
   color: var(--color-steel);
 }
 
-.case-studies__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
+/* ---- Carousel ---- */
+.carousel {
+  position: relative;
 }
 
-/* When there are 2+ cards, switch to two columns */
-.case-studies__grid:has(.case-study:nth-child(2)) {
-  grid-template-columns: repeat(2, 1fr);
+.carousel__viewport {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
 }
 
-/* Stack image/content vertically in multi-card layout */
-.case-studies__grid:has(.case-study:nth-child(2)) .case-study {
-  grid-template-columns: 1fr;
+.carousel__track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Single featured card */
+.carousel__slide {
+  min-width: 100%;
+  flex-shrink: 0;
+}
+
+.carousel__btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-dark-gray);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 2;
+}
+
+.carousel__btn:hover {
+  border-color: var(--color-teal);
+  background: rgba(45, 212, 168, 0.08);
+  color: var(--color-teal);
+}
+
+.carousel__btn--prev { left: -22px; }
+.carousel__btn--next { right: -22px; }
+
+.carousel__dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.carousel__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+}
+
+.carousel__dot--active {
+  background: var(--color-teal);
+  transform: scale(1.3);
+}
+
+.carousel__dot:hover:not(.carousel__dot--active) {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* ---- Case Study Card ---- */
 .case-study {
   display: grid;
   grid-template-columns: 0.4fr 0.6fr;
@@ -1770,9 +1828,8 @@ section {
     min-height: 280px;
   }
 
-  .case-studies__grid:has(.case-study:nth-child(2)) {
-    grid-template-columns: 1fr;
-  }
+  .carousel__btn--prev { left: 8px; }
+  .carousel__btn--next { right: 8px; }
 
   .audience__inner {
     grid-template-columns: 1fr;

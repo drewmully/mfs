@@ -956,7 +956,6 @@ section {
 
 .carousel__viewport {
   overflow: hidden;
-  border-radius: var(--radius-lg);
 }
 
 .carousel__track {
@@ -1050,7 +1049,6 @@ section {
 
 .case-study:hover {
   border-color: rgba(45, 212, 168, 0.15);
-  transform: translateY(-4px);
   box-shadow: var(--shadow-card);
 }
 
@@ -1059,14 +1057,10 @@ section {
 }
 
 .case-study__image {
-  position: relative;
   overflow: hidden;
-  min-height: 360px;
 }
 
 .case-study__image img {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1825,7 +1819,7 @@ section {
   }
 
   .case-study__image {
-    min-height: 280px;
+    height: 280px;
   }
 
   .carousel__btn--prev { left: 8px; }
@@ -1928,7 +1922,7 @@ section {
   }
 
   .case-study__image {
-    min-height: 240px;
+    height: 240px;
   }
 
   .diff-card {

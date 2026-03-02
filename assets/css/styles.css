@@ -964,9 +964,9 @@ section {
 }
 
 .carousel__slide {
-  min-width: 100%;
+  width: 100%;
+  min-width: 0;
   flex-shrink: 0;
-  padding: 4px;
 }
 
 .carousel__btn {
@@ -1026,10 +1026,11 @@ section {
 /* ---- Case Study Card ---- */
 .case-study {
   display: grid;
-  grid-template-columns: 0.4fr 0.6fr;
+  grid-template-columns: 0.35fr 0.65fr;
   background: var(--color-dark-gray);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-lg);
+  overflow: hidden;
   transition: all var(--transition-medium);
   position: relative;
 }
@@ -1059,7 +1060,6 @@ section {
 .case-study__image {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
 }
 
 .case-study__image img {
@@ -1077,10 +1077,11 @@ section {
 }
 
 .case-study__content {
-  padding: 48px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
 }
 
 .case-study__brand {
@@ -1824,7 +1825,6 @@ section {
 
   .case-study__image {
     height: 280px;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 
   .carousel__btn--prev { left: 8px; }

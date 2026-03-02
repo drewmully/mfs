@@ -960,6 +960,11 @@ section {
   grid-template-columns: repeat(2, 1fr);
 }
 
+/* Stack image/content vertically in multi-card layout */
+.case-studies__grid:has(.case-study:nth-child(2)) .case-study {
+  grid-template-columns: 1fr;
+}
+
 /* Single featured card */
 .case-study {
   display: grid;

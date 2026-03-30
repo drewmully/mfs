@@ -8,7 +8,7 @@
   </url>
   <url>
     <loc>https://mullyfulfillment.com/blog/</loc>
-    <lastmod>2026-03-29</lastmod>
+    <lastmod>2026-03-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -147,6 +147,12 @@
   <url>
     <loc>https://mullyfulfillment.com/blog/returns-processing-the-fulfillment-step-most-3pls-get-wrong</loc>
     <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mullyfulfillment.com/blog/the-math-behind-free-shipping-when-it-helps-vs-hurts</loc>
+    <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

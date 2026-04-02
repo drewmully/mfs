@@ -8,7 +8,7 @@
   </url>
   <url>
     <loc>https://mullyfulfillment.com/blog/</loc>
-    <lastmod>2026-04-01</lastmod>
+    <lastmod>2026-04-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -165,6 +165,12 @@
   <url>
     <loc>https://mullyfulfillment.com/blog/fulfillment-performance-metrics-that-actually-matter</loc>
     <lastmod>2026-04-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mullyfulfillment.com/blog/why-boutique-3pls-outperform-mega-warehouses-for-growing-dtc-brands</loc>
+    <lastmod>2026-04-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

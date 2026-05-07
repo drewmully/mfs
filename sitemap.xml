@@ -8,7 +8,7 @@
   </url>
   <url>
     <loc>https://mullyfulfillment.com/blog/</loc>
-    <lastmod>2026-05-06</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -255,6 +255,12 @@
   <url>
     <loc>https://mullyfulfillment.com/blog/peak-season-fulfillment-prep-what-smart-dtc-brands-do-90-days-before-q4</loc>
     <lastmod>2026-05-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mullyfulfillment.com/blog/how-same-day-fulfillment-changes-dtc-customer-experience</loc>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

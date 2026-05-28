@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A behind-the-scenes look at how MFS maintains 99.9% order accuracy at scale — the systems, checks, and culture that make it happen.">
+  <meta name="description" content="A behind-the-scenes look at how MFS maintains 99.9% order accuracy at scale — the systems, habits, and standards that make it possible.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://mullyfulfillment.com/blog/99-9-order-accuracy-how-we-do-it">
   <title>99.9% Order Accuracy Isn't Luck — Here's How We Do It | MFS Blog</title>
@@ -11,7 +11,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://mullyfulfillment.com/blog/99-9-order-accuracy-how-we-do-it">
   <meta property="og:title" content="99.9% Order Accuracy Isn't Luck — Here's How We Do It">
-  <meta property="og:description" content="A behind-the-scenes look at how MFS maintains 99.9% order accuracy at scale — the systems, checks, and culture that make it happen.">
+  <meta property="og:description" content="A behind-the-scenes look at how MFS maintains 99.9% order accuracy at scale — the systems, habits, and standards that make it possible.">
   <meta property="og:image" content="https://cdn.shopify.com/s/files/1/0561/0530/4256/files/Untitled_design_19.png?v=1772057565">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -20,7 +20,7 @@
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="99.9% Order Accuracy Isn't Luck — Here's How We Do It">
-  <meta name="twitter:description" content="A behind-the-scenes look at how MFS maintains 99.9% order accuracy at scale — the systems, checks, and culture that make it happen.">
+  <meta name="twitter:description" content="A behind-the-scenes look at how MFS maintains 99.9% order accuracy at scale — the systems, habits, and standards that make it possible.">
   <meta name="twitter:image" content="https://cdn.shopify.com/s/files/1/0561/0530/4256/files/Untitled_design_19.png?v=1772057565">
 
   <script type="application/ld+json">
@@ -28,10 +28,10 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "99.9% Order Accuracy Isn't Luck — Here's How We Do It",
-    "description": "A behind-the-scenes look at how MFS maintains 99.9% order accuracy at scale — the systems, checks, and culture that make it happen.",
+    "description": "A behind-the-scenes look at how MFS maintains 99.9% order accuracy at scale — the systems, habits, and standards that make it possible.",
     "image": "https://cdn.shopify.com/s/files/1/0561/0530/4256/files/Untitled_design_19.png?v=1772057565",
-    "datePublished": "2026-04-16",
-    "dateModified": "2026-04-16",
+    "datePublished": "2026-05-28",
+    "dateModified": "2026-05-28",
     "author": { "@type": "Organization", "name": "MFS — Mully Fulfillment Services", "url": "https://mullyfulfillment.com" },
     "publisher": { "@type": "Organization", "name": "MFS — Mully Fulfillment Services", "url": "https://mullyfulfillment.com", "logo": { "@type": "ImageObject", "url": "https://cdn.shopify.com/s/files/1/0561/0530/4256/files/Untitled_design_19.png?v=1772057565" } },
     "mainEntityOfPage": "https://mullyfulfillment.com/blog/99-9-order-accuracy-how-we-do-it"
@@ -81,38 +81,39 @@
         <span class="label">Warehouse Ops</span>
         <h1>99.9% Order Accuracy Isn't Luck — Here's How We Do It</h1>
         <div class="blog-article__meta">
-          <span>April 16, 2026</span>
+          <span>May 28, 2026</span>
           <span>4 min read</span>
           <span>By the MFS Team</span>
         </div>
       </header>
 
       <div class="blog-article__body">
-        <p>A 99.9% order accuracy rate sounds like a marketing claim. Here's the unglamorous, operational truth behind how it actually gets done.</p>
-<p>Every wrong item packed is a customer service ticket, a return label, a refund, and — most expensively — a customer who might not come back. For DTC brands, fulfillment errors don't just cost money. They cost trust.</p>
-<p>So when we say 99.9% order accuracy, we're not throwing out a number. We're describing a system built around making errors structurally difficult to make.</p>
+        <h2>The Number That Actually Matters</h2>
+<p>Every 3PL has a pitch deck. Most of them say something about accuracy. What they rarely do is explain how that number is produced — or what happens when it slips.</p>
+<p>At MFS, we track 99.9%+ order accuracy as an operational standard, not a marketing stat. That means for every 1,000 orders shipped, fewer than one leaves this building wrong. Here's what it actually takes to hold that line.</p>
+<h2>It Starts Before the Pick</h2>
+<p>Most fulfillment errors don't happen during pick/pack. They happen before it — in how inventory is received, labeled, and slotted.</p>
+<p>When a new SKU arrives at MFS, it goes through a receiving verification process before it touches a single shelf. Every unit is counted against the PO, inspected for damage, and assigned a barcode-linked bin location in our WMS (warehouse management system). If the count is off by even a few units, we flag it immediately rather than absorbing the discrepancy and discovering it months later during a customer complaint.</p>
+<p>Garbage in, garbage out. Clean inventory data is the foundation everything else is built on.</p>
+<h2>Two-Touch Verification on Every Order</h2>
+<p>Once an order hits the pick queue, our process requires two distinct verification points before a box is sealed.</p>
+<p>The first happens at the pick station. Every item scanned against the order — wrong SKU, wrong quantity, the system flags it before the picker moves on. The second happens at pack, where the completed order is verified again before it's boxed and labeled. Two separate checkpoints, two separate opportunities to catch a mistake before it becomes a customer problem.</p>
+<p>This isn't belt-and-suspenders overkill. It's the difference between a 99.9% accuracy rate and a 98% one — and at any meaningful order volume, that gap compounds fast.</p>
 <h2>The Real Cost of a 1% Error Rate</h2>
-<p>If you're shipping 5,000 orders a month and your 3PL has a 1% error rate, that's 50 wrong orders every single month. At an average cost of $15-$20 per error to resolve — including reshipping, return handling, and customer service time — you're looking at $750 to $1,000 in monthly damage. That's before you factor in the customer who screenshots the wrong order and posts it.</p>
-<p>A 0.1% error rate on those same 5,000 orders is 5 mistakes. That's a fundamentally different operational reality.</p>
-<h2>It Starts With SKU Organization, Not Technology</h2>
-<p>A lot of warehouses assume that software solves accuracy problems. It doesn't. Software surfaces errors. Preventing them starts with physical organization.</p>
-<p>At MFS, every SKU has a dedicated location. Similar-looking products — different colorways, different sizes, products with near-identical packaging — are never stored adjacent to each other. That single rule eliminates a significant percentage of pick errors before a single scan is taken.</p>
-<p>When a new brand onboards, we don't just dump inventory on a shelf. We map the warehouse location strategy around their specific catalog. If you sell a supplement line with 12 SKUs in similar bottles, that gets treated differently from a 3-SKU apparel drop.</p>
-<h2>Scan-Verify-Pack: The Three-Step Rule</h2>
-<p>Every order at MFS goes through a three-point verification process before it closes.</p>
-<p>First, the picker scans the item at the shelf location to confirm the right SKU was pulled. Second, the item is scanned again at the packing station against the open order. Third, the packed box is weighed. If the weight doesn't match the expected weight for that order within a defined tolerance, it flags for manual review before it ever hits a shipping label.</p>
-<p>Weight-based verification is underused in the industry. It catches missing items, double-picks, and wrong-quantity errors that barcode scanning alone can miss — especially on small, light SKUs.</p>
-<h2>Human Accountability at Every Step</h2>
-<p>Automation is a tool, not a replacement for accountability. Every picker and packer at MFS is tied to the orders they touch. That traceability isn't punitive — it's structural. When an error does occur, we can trace it back to exactly where it happened and fix the process, not just apologize for the outcome.</p>
-<p>This is also why we keep our team tight and trained. High turnover is one of the most accurate predictors of accuracy problems in a warehouse. When someone new is picking orders every week, errors spike. Consistency in staffing is a fulfillment quality decision, not just an HR one.</p>
-<h2>What Happens When an Error Still Occurs</h2>
-<p>At 99.9% accuracy, errors are rare — but they happen. The standard we hold ourselves to isn't perfection on the first attempt. It's perfection in how we respond.</p>
-<p>When an order error is identified, we flag it in our system within the hour, contact the brand directly (not through a ticketing queue), and resolve it with a same-day reship if the order is still within our fulfillment window. The brand hears about it from us before their customer has time to complain.</p>
-<p>That response protocol matters as much as the accuracy rate itself.</p>
-<h2>The Compounding Value of Getting It Right</h2>
-<p>Order accuracy is one of those operational metrics that doesn't get celebrated until it breaks. Brands don't notice when everything ships correctly — they just see happy customers, fewer support tickets, and cleaner financials. They notice the moment something goes wrong.</p>
-<p>Building a system where errors are rare enough to be events rather than averages isn't a feature. It's the baseline expectation every DTC brand should have from their fulfillment partner.</p>
-<p>If your current 3PL can't tell you their exact error rate — that's the answer.</p>
+<p>A 1% error rate sounds small until you do the math. At 10,000 orders per month, that's 100 wrong shipments. Each one triggers a customer service interaction, a replacement unit, a return label, and a review that might not be kind.</p>
+<p>Conservatively, a single fulfillment error costs a brand $15–$30 in direct recovery costs alone — before you factor in the customer who doesn't come back. At 100 errors per month, you're looking at $1,500–$3,000 in hard costs, plus the slower bleed of LTV erosion.</p>
+<p>High accuracy isn't an operational nicety. It's a retention strategy.</p>
+<h2>How We Handle Volume Spikes Without Losing Accuracy</h2>
+<p>Flash sales, influencer drops, subscription renewals — DTC brands don't ship in a steady, predictable drumbeat. Volume can double or triple overnight, and that's exactly when accuracy rates at most 3PLs start to slip.</p>
+<p>Our approach is to pre-stage orders before peak windows hit. When we know a brand is launching a drop or running a promotion, we work with them ahead of time to stage inventory, pre-kit bundles where possible, and adjust staffing on the pick floor before the surge — not during it. Reacting to volume after it arrives is where errors get made.</p>
+<p>Planning ahead isn't a luxury. At scale, it's the only way to protect accuracy when it matters most.</p>
+<h2>Culture Is Part of the System</h2>
+<p>Processes matter. Technology matters. But the real reason our accuracy rate holds is that the people on the floor treat every order like it's going to a real person — because it is.</p>
+<p>That sounds obvious, but it isn't universal. In large, anonymous warehouse operations, it's easy for a box to become just another box. At MFS, we're intentionally smaller and more accountable than the big-box 3PLs. Every picker knows their error rate. Every packer knows the brands they're working with. That accountability loop matters more than any piece of software.</p>
+<h2>What This Means for Your Brand</h2>
+<p>If you're evaluating a 3PL, ask them one question: <em>What is your order accuracy rate, and how do you measure it?</em></p>
+<p>If they can't answer with specifics — a real percentage, a real methodology, a real process — that's the answer you need.</p>
+<p>Accuracy at scale is earned through disciplined receiving, two-touch verification, proactive volume planning, and a team that's accountable to the number every single day. That's what 99.9% actually looks like from the inside.</p>
       </div>
 
       <div class="blog-cta">

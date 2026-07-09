@@ -297,18 +297,18 @@ section {
 }
 
 .nav__logo {
-  font-family: var(--font-primary);
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: var(--color-navy-900);
-  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
 }
 
-.nav__logo:hover { color: var(--color-navy-900); }
-
-.nav__logo span {
-  color: var(--color-electric);
+.nav__logo img {
+  height: 34px;
+  width: auto;
+  display: block;
 }
+
+.nav__logo:hover { opacity: 0.85; }
 
 .nav__links {
   display: flex;
@@ -1807,11 +1807,16 @@ section {
 }
 
 .footer__logo {
-  font-size: 1.35rem; font-weight: 800; color: var(--color-white);
-  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
 }
 
-.footer__logo span { color: var(--color-electric); }
+.footer__logo img {
+  height: 36px;
+  width: auto;
+  display: block;
+}
 
 .footer__text {
   color: rgba(255, 255, 255, 0.55);

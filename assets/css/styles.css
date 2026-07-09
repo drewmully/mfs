@@ -768,6 +768,44 @@ section {
   filter: none;
 }
 
+/* ---------- Tech Stack variant (full color, tighter grid, more logos) ---------- */
+.trusted--stack {
+  padding: 44px 0 60px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.trusted--stack .trusted__logos {
+  gap: clamp(1.25rem, 3.2vw, 2.75rem);
+  row-gap: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.trusted--stack .trusted__logo {
+  height: auto;
+  opacity: 1;
+  filter: none;
+  cursor: default;
+}
+
+.trusted--stack .trusted__logo img {
+  height: 30px;
+  width: auto;
+  max-height: 30px;
+  max-width: 160px;
+  mix-blend-mode: multiply; /* eliminates white-square rims on JPG logos over white bg */
+}
+
+.trusted--stack .trusted__logo:hover {
+  opacity: 1;
+  filter: none;
+}
+
+/* Palantir JPG has large internal whitespace — upscale to match visual weight of other marks */
+.trusted--stack .trusted__logo--palantir img {
+  height: 54px;
+  max-height: 54px;
+  max-width: 200px;
+}
+
 /* ---------- Section Headers (shared) ---------- */
 .section__header {
   max-width: 720px;

@@ -727,22 +727,45 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(1.5rem, 4vw, 3.5rem);
+  gap: clamp(1.75rem, 4.5vw, 3.75rem);
   flex-wrap: wrap;
 }
 
 .trusted__logo {
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: var(--color-slate-500);
-  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
   opacity: 0.85;
-  transition: color var(--transition-fast), opacity var(--transition-fast);
+  transition: opacity var(--transition-fast), filter var(--transition-fast);
+  filter: grayscale(1) contrast(1.2);
+}
+
+.trusted__logo img {
+  max-height: 100%;
+  width: auto;
+  max-width: 180px;
+  display: block;
+  object-fit: contain;
 }
 
 .trusted__logo:hover {
-  color: var(--color-navy-900);
   opacity: 1;
+  filter: grayscale(0);
+}
+
+/* Logos that ship on a dark background — render on a subtle chip so they're readable on white */
+.trusted__logo--dark {
+  background: var(--color-navy-900);
+  border-radius: 8px;
+  padding: 6px 12px;
+  filter: none;
+  opacity: 0.85;
+}
+
+.trusted__logo--dark:hover {
+  opacity: 1;
+  filter: none;
 }
 
 /* ---------- Section Headers (shared) ---------- */

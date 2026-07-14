@@ -412,8 +412,61 @@
     } catch (e) { /* ignore quota errors */ }
   }
 
-  function fetchReviews() {
-    if (!window.google || !google.maps || !google.maps.places) return;
+  function normalizePlace(p) {
+    // Modern Place API returns camelCase (userRatingCount, displayName, etc.).
+    // Coerce into the shape the classic renderer expects.
+    var reviews = (p.reviews || []).map(function (r) {
+      var authorName = r.authorAttribution ? r.authorAttribution.displayName : (r.author_name || 'Google reviewer');
+      var authorUri  = r.authorAttribution ? r.authorAttribution.uri : r.author_url;
+      var authorPic  = r.authorAttribution ? r.authorAttribution.photoURI : r.profile_photo_url;
+      var text = (r.text && r.text.text) ? r.text.text : (typeof r.text === 'string' ? r.text : (r.originalText && r.originalText.text) || '');
+      var timeSec = r.publishTime ? Math.floor(new Date(r.publishTime).getTime() / 1000) : r.time;
+      return {
+        author_name: authorName,
+        author_url: authorUri,
+        profile_photo_url: authorPic,
+        rating: r.rating,
+        relative_time_description: r.relativePublishTimeDescription || r.relative_time_description,
+        text: text,
+        time: timeSec
+      };
+    });
+    return {
+      rating: p.rating,
+      user_ratings_total: p.userRatingCount != null ? p.userRatingCount : p.user_ratings_total,
+      reviews: reviews
+    };
+  }
+
+  async function fetchReviewsNewApi() {
+    // Use the modern google.maps.places.Place API (post-March-2025 default).
+    var placesLib = await google.maps.importLibrary('places');
+    var Place = placesLib.Place;
+
+    // Step 1: text-search to resolve the place id
+    var searchRes = await Place.searchByText({
+      textQuery: REVIEWS_QUERY,
+      fields: ['id', 'displayName'],
+      maxResultCount: 1
+    });
+    var first = (searchRes && searchRes.places && searchRes.places[0]) || null;
+    if (!first) {
+      console.warn('[reviews] no place found');
+      renderReviews(null);
+      return;
+    }
+
+    // Step 2: fetch rating + reviews
+    var place = new Place({ id: first.id });
+    await place.fetchFields({ fields: ['rating', 'userRatingCount', 'reviews'] });
+
+    var normalized = normalizePlace(place);
+    renderReviews(normalized);
+    saveReviewsToCache(normalized);
+  }
+
+  function fetchReviewsLegacy() {
+    if (!window.google || !google.maps || !google.maps.places || !google.maps.places.PlacesService) return;
     var container = document.createElement('div');
     var svc = new google.maps.places.PlacesService(container);
 
@@ -422,7 +475,7 @@
       fields: ['place_id']
     }, function (results, status) {
       if (status !== google.maps.places.PlacesServiceStatus.OK || !results || !results[0]) {
-        console.warn('[reviews] findPlace failed:', status);
+        console.warn('[reviews] legacy findPlace failed:', status);
         renderReviews(null);
         return;
       }
@@ -431,7 +484,7 @@
         fields: ['rating', 'user_ratings_total', 'reviews']
       }, function (place, status2) {
         if (status2 !== google.maps.places.PlacesServiceStatus.OK || !place) {
-          console.warn('[reviews] getDetails failed:', status2);
+          console.warn('[reviews] legacy getDetails failed:', status2);
           renderReviews(null);
           return;
         }
@@ -439,6 +492,19 @@
         saveReviewsToCache(place);
       });
     });
+  }
+
+  function fetchReviews() {
+    if (!window.google || !google.maps || !google.maps.places) return;
+    // Prefer modern Place API; fall back to classic PlacesService if unavailable.
+    if (google.maps.places.Place && typeof google.maps.places.Place.searchByText === 'function') {
+      fetchReviewsNewApi().catch(function (err) {
+        console.warn('[reviews] new API failed, falling back:', err);
+        fetchReviewsLegacy();
+      });
+    } else {
+      fetchReviewsLegacy();
+    }
   }
 
   function initReviews() {

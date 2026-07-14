@@ -512,8 +512,13 @@
     var cached = loadReviewsFromCache();
     if (cached) renderReviews(cached);
 
-    // Expose the async-load callback the Maps script will invoke
-    window.onGoogleMapsReady = function () { fetchReviews(); };
+    // Use the pre-registered replay hook if the Maps script beat us to it,
+    // otherwise fall back to setting the callback directly.
+    if (typeof window.__mfsMapsReadyReplay === 'function') {
+      window.__mfsMapsReadyReplay(function () { fetchReviews(); });
+    } else {
+      window.onGoogleMapsReady = function () { fetchReviews(); };
+    }
 
     // Handle the case where the script already loaded before this ran
     if (window.google && google.maps && google.maps.places) fetchReviews();

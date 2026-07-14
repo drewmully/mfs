@@ -984,6 +984,19 @@
   </footer>
 
 
+  <!-- Pre-register Google Maps callback so it queues until main.js is ready -->
+  <script>
+    (function () {
+      var pending = null;
+      window.onGoogleMapsReady = function () { pending = true; };
+      // Provide a hook main.js can call after it defines the real handler.
+      window.__mfsMapsReadyReplay = function (realHandler) {
+        window.onGoogleMapsReady = realHandler;
+        if (pending) realHandler();
+      };
+    })();
+  </script>
+
   <!-- Google Places (async load; used by main.js to hydrate #reviews) -->
   <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqdnCVbRXCtNbl3jpUbjtRHPVMYuAa2VM&libraries=places&loading=async&callback=onGoogleMapsReady"></script>

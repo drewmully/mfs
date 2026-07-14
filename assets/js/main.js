@@ -191,7 +191,7 @@
       var submitBtn = form.querySelector('button[type="submit"]');
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
+        submitBtn.textContent = 'Booking...';
       }
 
       // Send to Formspree (replace YOUR_FORM_ID with your actual Formspree form ID)
@@ -222,7 +222,7 @@
       .catch(function () {
         if (submitBtn) {
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Submit Application';
+          submitBtn.textContent = 'Book Appointment';
         }
         alert('Something went wrong. Please try again or email us directly.');
       });

@@ -240,6 +240,20 @@ section {
   transform: translateY(-1px);
 }
 
+/* Alt primary — same electric-blue + white text as .btn--primary, but subtler (no glow) so
+   two primaries can sit side-by-side without competing. */
+.btn--primary.btn--primary-alt {
+  background: var(--color-electric-hover);
+  color: var(--color-white);
+  box-shadow: none;
+}
+
+.btn--primary.btn--primary-alt:hover {
+  background: var(--color-electric);
+  color: var(--color-white);
+  box-shadow: var(--shadow-electric);
+}
+
 .btn--large {
   padding: 1.05rem 1.9rem;
   font-size: 1rem;
@@ -328,10 +342,15 @@ section {
   color: var(--color-navy-900);
 }
 
-.nav__cta {
+.nav__cta,
+.nav__links a.nav__cta {
   padding: 0.6rem 1.15rem !important;
   font-size: 0.9rem !important;
+  color: var(--color-white) !important;
 }
+
+.nav__cta:hover,
+.nav__links a.nav__cta:hover { color: var(--color-white) !important; }
 
 .nav__toggle {
   display: none;
@@ -766,6 +785,90 @@ section {
 .trusted__logo--dark:hover {
   opacity: 1;
   filter: none;
+}
+
+/* ---------- Google Reviews strip ---------- */
+.reviews {
+  padding: 32px 0 8px;
+}
+
+.reviews__card {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 20px 12px 14px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  box-shadow: 0 4px 14px -8px rgba(11, 27, 58, 0.15);
+  text-decoration: none;
+  color: var(--color-ink-strong);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  margin: 0 auto;
+}
+
+.reviews .container { display: flex; justify-content: center; }
+
+.reviews__card:hover {
+  transform: translateY(-1px);
+  border-color: var(--color-border-strong, #cfd6e3);
+  box-shadow: 0 10px 26px -12px rgba(11, 27, 58, 0.22);
+  color: var(--color-ink-strong);
+}
+
+.reviews__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  background: #fff;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  flex: none;
+}
+
+.reviews__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reviews__stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+
+.reviews__rating {
+  font-weight: 800;
+  color: var(--color-navy-900);
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.reviews__stars-icons {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.reviews__meta {
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.01em;
+}
+
+.reviews__meta-link {
+  color: var(--color-electric);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .reviews__card { padding: 10px 16px 10px 12px; gap: 10px; }
+  .reviews__badge { width: 34px; height: 34px; }
+  .reviews__badge svg { width: 26px; height: 26px; }
+  .reviews__rating { font-size: 1rem; }
+  .reviews__meta { font-size: 0.75rem; }
 }
 
 /* ---------- Tech Stack variant (full color, tighter grid, more logos) ---------- */
@@ -1720,6 +1823,13 @@ section {
 .form-group { display: flex; flex-direction: column; }
 
 .form-group--full { grid-column: 1 / -1; }
+
+.form-optional {
+  color: var(--color-ink-muted);
+  font-weight: 400;
+  font-size: 0.85em;
+  margin-left: 0.35rem;
+}
 
 .form-group label {
   font-size: 0.85rem;

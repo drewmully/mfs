@@ -297,6 +297,162 @@
     });
   }
 
+  /* ---------- Google Reviews ---------- */
+  // Cache duration for review responses (24h). Prevents hammering the Places API on every
+  // page load. Cache lives in sessionStorage so a hard reload picks up fresh data next day.
+  var REVIEWS_CACHE_KEY = 'mfs_reviews_v1';
+  var REVIEWS_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+  var REVIEWS_QUERY = 'Mully Fulfillment Services Detroit';
+
+  function renderStars(rating, size) {
+    size = size || 16;
+    var full = Math.round(rating);
+    var out = '';
+    for (var i = 0; i < 5; i++) {
+      var fill = i < full ? '#FBBC05' : '#E4E8EF';
+      out += '<svg width="' + size + '" height="' + size + '" viewBox="0 0 20 20" aria-hidden="true">'
+          + '<path fill="' + fill + '" d="M10 1.5l2.6 5.3 5.9.9-4.3 4.2 1 5.9L10 15l-5.3 2.8 1-5.9L1.5 7.7l5.9-.9z"/></svg>';
+    }
+    return out;
+  }
+
+  function formatRelativeTime(rev) {
+    if (rev.relative_time_description) return rev.relative_time_description;
+    if (rev.time) {
+      var d = new Date(rev.time * 1000);
+      return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    }
+    return '';
+  }
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+
+  function renderReviews(place) {
+    var summaryRating = document.querySelector('[data-reviews-rating]');
+    var summaryStars = document.querySelector('[data-reviews-stars]');
+    var summaryTotal = document.querySelector('[data-reviews-total]');
+    var grid = document.querySelector('[data-reviews-grid]');
+
+    if (!place) {
+      if (summaryTotal) summaryTotal.textContent = 'Read reviews on Google';
+      return;
+    }
+
+    var rating = place.rating != null ? place.rating.toFixed(1) : '5.0';
+    var total = place.user_ratings_total || 0;
+
+    if (summaryRating) summaryRating.textContent = rating;
+    if (summaryStars) summaryStars.innerHTML = renderStars(place.rating || 5, 18);
+    if (summaryTotal) summaryTotal.textContent = 'Rated ' + rating + ' from ' + total + ' Google review' + (total === 1 ? '' : 's');
+
+    if (!grid) return;
+    var reviews = (place.reviews || []).slice(0, 3);
+    if (!reviews.length) { grid.style.display = 'none'; return; }
+
+    grid.innerHTML = reviews.map(function (r) {
+      var author = escapeHtml(r.author_name || 'Google reviewer');
+      var text = escapeHtml(r.text || '');
+      var when = escapeHtml(formatRelativeTime(r));
+      var initials = author.split(/\s+/).map(function(p){return p[0]||'';}).slice(0,2).join('').toUpperCase();
+      var photo = r.profile_photo_url ? '<img class="review-card__avatar-img" src="' + escapeHtml(r.profile_photo_url) + '" alt="" loading="lazy" referrerpolicy="no-referrer">'
+                                       : '<span class="review-card__avatar-fallback">' + initials + '</span>';
+      var link = r.author_url ? escapeHtml(r.author_url) : '#';
+      return ''
+        + '<a class="review-card" href="' + link + '" target="_blank" rel="noopener" role="listitem">'
+        +   '<div class="review-card__head">'
+        +     '<span class="review-card__avatar">' + photo + '</span>'
+        +     '<div class="review-card__who">'
+        +       '<div class="review-card__name">' + author + '</div>'
+        +       '<div class="review-card__when">' + when + '</div>'
+        +     '</div>'
+        +     '<span class="review-card__g" aria-hidden="true">'
+        +       '<svg viewBox="0 0 48 48" width="20" height="20"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 40.98 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18c-.44-1.32-.69-2.72-.69-4.18s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.44 2 24s.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.42 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 7.02 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>'
+        +     '</span>'
+        +   '</div>'
+        +   '<div class="review-card__stars">' + renderStars(r.rating || 5, 14) + '</div>'
+        +   '<p class="review-card__text">' + text + '</p>'
+        + '</a>';
+    }).join('');
+  }
+
+  function loadReviewsFromCache() {
+    try {
+      var raw = sessionStorage.getItem(REVIEWS_CACHE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (!parsed || !parsed.savedAt) return null;
+      if (Date.now() - parsed.savedAt > REVIEWS_CACHE_TTL_MS) return null;
+      return parsed.place;
+    } catch (e) { return null; }
+  }
+
+  function saveReviewsToCache(place) {
+    try {
+      // Trim data to essentials before caching to keep sessionStorage small
+      var trimmed = {
+        rating: place.rating,
+        user_ratings_total: place.user_ratings_total,
+        reviews: (place.reviews || []).map(function (r) {
+          return {
+            author_name: r.author_name,
+            author_url: r.author_url,
+            profile_photo_url: r.profile_photo_url,
+            rating: r.rating,
+            relative_time_description: r.relative_time_description,
+            text: r.text,
+            time: r.time
+          };
+        })
+      };
+      sessionStorage.setItem(REVIEWS_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), place: trimmed }));
+    } catch (e) { /* ignore quota errors */ }
+  }
+
+  function fetchReviews() {
+    if (!window.google || !google.maps || !google.maps.places) return;
+    var container = document.createElement('div');
+    var svc = new google.maps.places.PlacesService(container);
+
+    svc.findPlaceFromQuery({
+      query: REVIEWS_QUERY,
+      fields: ['place_id']
+    }, function (results, status) {
+      if (status !== google.maps.places.PlacesServiceStatus.OK || !results || !results[0]) {
+        console.warn('[reviews] findPlace failed:', status);
+        renderReviews(null);
+        return;
+      }
+      svc.getDetails({
+        placeId: results[0].place_id,
+        fields: ['rating', 'user_ratings_total', 'reviews']
+      }, function (place, status2) {
+        if (status2 !== google.maps.places.PlacesServiceStatus.OK || !place) {
+          console.warn('[reviews] getDetails failed:', status2);
+          renderReviews(null);
+          return;
+        }
+        renderReviews(place);
+        saveReviewsToCache(place);
+      });
+    });
+  }
+
+  function initReviews() {
+    // Instant paint from cache if we have it
+    var cached = loadReviewsFromCache();
+    if (cached) renderReviews(cached);
+
+    // Expose the async-load callback the Maps script will invoke
+    window.onGoogleMapsReady = function () { fetchReviews(); };
+
+    // Handle the case where the script already loaded before this ran
+    if (window.google && google.maps && google.maps.places) fetchReviews();
+  }
+
   /* ---------- Init All ---------- */
   function init() {
     initReveal();
@@ -304,6 +460,7 @@
     initParticles();
     initForm();
     initCarousel();
+    initReviews();
   }
 
   if (document.readyState === 'loading') {

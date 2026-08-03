@@ -1767,10 +1767,17 @@ section {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  text-decoration: none;
+  color: inherit;
   transition:
     transform var(--transition-medium),
     box-shadow var(--transition-medium),
     border-color var(--transition-medium);
+}
+
+.team-card:focus-visible {
+  outline: 2px solid var(--color-electric);
+  outline-offset: 3px;
 }
 
 .team-card:hover,
@@ -1913,6 +1920,38 @@ section {
   color: var(--color-slate-500);
   line-height: 1.6;
   margin: 0;
+}
+
+.team-card__link {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-slate-500);
+  margin-top: auto;
+  padding-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.6;
+  transition: color var(--transition-medium), opacity var(--transition-medium), gap var(--transition-medium);
+}
+
+.team-card__link span {
+  transition: transform var(--transition-medium);
+  display: inline-block;
+}
+
+.team-card:hover .team-card__link,
+.team-card:focus-visible .team-card__link {
+  color: var(--color-electric);
+  opacity: 1;
+}
+
+.team-card:hover .team-card__link span,
+.team-card:focus-visible .team-card__link span {
+  transform: translateX(3px);
 }
 
 /* Touch fallback — no hover, so surface the world label as a corner tag */

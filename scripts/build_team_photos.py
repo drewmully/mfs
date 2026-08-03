@@ -141,8 +141,9 @@ def build_background() -> Image.Image:
 class Subject:
     name: str            # output filename stem
     src: str             # path or URL
-    y_bias: float = 0.0  # positive shifts subject down; keeps top of head off canvas edge
-    scale: float = 1.0   # 1.0 = subject fills 92% of canvas height
+    y_bias: float = 0.0  # positive shifts subject down further, negative pulls up
+    scale: float = 1.0   # 1.0 = subject is as tall as the canvas
+    bleed: float = 0.06  # fraction of canvas the subject bleeds past the bottom edge
     pre_crop: tuple | None = None  # (left_pct, top_pct, right_pct, bottom_pct) applied before cutout
 
 
@@ -175,13 +176,22 @@ def _tight_crop(rgba: Image.Image) -> Image.Image:
     return rgba.crop(bbox)
 
 
-def composite(subject_rgba: Image.Image, bg: Image.Image, y_bias=0.0, scale=1.0) -> Image.Image:
-    """Fit the subject onto the background canvas."""
+def composite(subject_rgba: Image.Image, bg: Image.Image, y_bias=0.0, scale=1.0, bleed=0.06) -> Image.Image:
+    """Fit the subject onto the background canvas.
+
+    Anchoring model:
+      - Sizes the subject to scale * CANVAS in height (default 1.0).
+      - Positions the subject so its bottom edge extends *past* the canvas
+        bottom by `bleed` * CANVAS pixels. This guarantees no visible
+        shoulder cutoff line at the bottom of the card.
+      - y_bias then nudges the subject up (negative) or down (positive)
+        from that guaranteed-bleed baseline.
+    """
     canvas = bg.copy().convert("RGBA")
     subj = _tight_crop(subject_rgba)
 
-    # Target height: 92% of canvas by default (people fill the frame like editorial portraits)
-    target_h = int(CANVAS * 0.92 * scale)
+    # Target height: scale * CANVAS. Default 1.0 means subject is as tall as the canvas.
+    target_h = int(CANVAS * scale)
     ratio = target_h / subj.height
     new_w = int(subj.width * ratio)
     subj = subj.resize((new_w, target_h), Image.LANCZOS)
@@ -191,10 +201,11 @@ def composite(subject_rgba: Image.Image, bg: Image.Image, y_bias=0.0, scale=1.0)
     a = a.filter(ImageFilter.GaussianBlur(radius=0.6))
     subj.putalpha(a)
 
-    # Horizontal center; vertical anchored so head/shoulders sit visually right
+    # Horizontal center
     x = (CANVAS - new_w) // 2
-    # Anchor top of subject near y=4% of canvas, plus optional bias
-    y = int(CANVAS * (0.04 + y_bias))
+    # Vertical: bottom of subject sits at CANVAS + bleed*CANVAS, then y_bias offsets
+    bottom_target = CANVAS + int(CANVAS * bleed)
+    y = bottom_target - target_h + int(CANVAS * y_bias)
     canvas.alpha_composite(subj, (x, y))
     return canvas.convert("RGB")
 
@@ -209,26 +220,30 @@ def main() -> None:
         Subject(
             name="drew",
             src=str(ROOT / "assets/images/drew-original.jpg"),
-            y_bias=0.06,
-            scale=0.95,
+            y_bias=0.0,
+            scale=1.0,
+            bleed=0.08,
         ),
         Subject(
             name="joe",
             src=str(ROOT / "assets/images/joe-original.jpg"),
-            y_bias=0.03,
+            y_bias=0.0,
             scale=1.0,
+            bleed=0.08,
         ),
         Subject(
             name="dakarai",
             src=str(ROOT / "assets/images/dakarai.jpg"),
-            y_bias=0.04,
+            y_bias=0.0,
             scale=1.02,
+            bleed=0.06,
         ),
         Subject(
             name="rodrigo",
             src=str(ROOT / "assets/images/rodrigo-original.jpg"),
-            y_bias=0.05,
+            y_bias=0.0,
             scale=1.0,
+            bleed=0.08,
         ),
     ]
 
@@ -240,7 +255,7 @@ def main() -> None:
         cut = cutout(img, session)
         # Debug: save the raw cutout
         cut.save(f"/tmp/team_cut_{s.name}.png")
-        result = composite(cut, bg, y_bias=s.y_bias, scale=s.scale)
+        result = composite(cut, bg, y_bias=s.y_bias, scale=s.scale, bleed=s.bleed)
         out = OUT_DIR / f"{s.name}.jpg"
         result.save(out, "JPEG", quality=90, optimize=True)
         print(f"    -> {out} ({out.stat().st_size} bytes)")

@@ -106,7 +106,8 @@
 }
 
 /* --- Section headers --- */
-.bio__section { margin-bottom: 48px; }
+/* Reset global `section { padding: var(--section-padding) 0 }` for in-bio sections */
+.bio__section { padding: 0; margin-bottom: 48px; }
 .bio__section + .bio__section { margin-top: 0; }
 
 .bio__section-label {

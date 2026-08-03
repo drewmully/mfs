@@ -1725,53 +1725,177 @@ section {
 }
 
 /* ---------- Team ---------- */
+/* ==========================================================================
+   Team — Three Worlds
+   Editorial 4-up grid of square portraits with hover overlay revealing the
+   "world" each manager owns and their headline capabilities. Below the grid,
+   a compact "Chain" strip shows how work hands off between them.
+   ========================================================================== */
 .team { background: var(--color-white); }
 
 .team__header {
   text-align: center;
-  max-width: 720px;
-  margin: 0 auto 3.5rem;
+  max-width: 760px;
+  margin: 0 auto 3rem;
 }
-.team__header h2 { margin-bottom: 1rem; }
-.team__header p { color: var(--color-slate-500); }
+.team__header h2 { margin-bottom: 1.1rem; }
+.team__header .team__lede {
+  color: var(--color-slate-500);
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+.team__header .team__lede strong {
+  color: var(--color-navy-900);
+  font-weight: 600;
+}
 
 .team__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
+  margin-bottom: 3.5rem;
 }
 
-@media (max-width: 900px) { .team__grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 500px) { .team__grid { grid-template-columns: 1fr; } }
+@media (max-width: 1024px) { .team__grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; } }
+@media (max-width: 560px)  { .team__grid { grid-template-columns: 1fr; } }
 
 .team-card {
+  position: relative;
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 1.75rem;
-  transition: transform var(--transition-medium), box-shadow var(--transition-medium), border-color var(--transition-medium);
-}
-
-.team-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
-  border-color: var(--color-electric);
-}
-
-.team-card__photo {
-  width: 88px; height: 88px;
-  border-radius: 50%;
   overflow: hidden;
-  margin-bottom: 1.25rem;
-  border: 2px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform var(--transition-medium),
+    box-shadow var(--transition-medium),
+    border-color var(--transition-medium);
 }
 
-.team-card__photo img { width: 100%; height: 100%; object-fit: cover; }
+.team-card:hover,
+.team-card:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--color-navy-900);
+  box-shadow: 0 22px 44px -22px rgba(11, 27, 58, 0.28);
+}
+
+/* --- Square portrait --- */
+.team-card__photo {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  background: var(--color-canvas-2);
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.team-card__photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1),
+              filter 400ms ease;
+  /* Subtle desaturation at rest for editorial cohesion; snaps back on hover */
+  filter: saturate(0.9) contrast(1.02);
+}
+
+.team-card:hover .team-card__photo img,
+.team-card:focus-within .team-card__photo img {
+  transform: scale(1.045);
+  filter: saturate(1) contrast(1.02);
+}
+
+/* --- Hover overlay: world label + capability chips --- */
+.team-card__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px;
+  color: var(--color-white);
+  background:
+    linear-gradient(180deg,
+      rgba(5, 11, 31, 0) 0%,
+      rgba(5, 11, 31, 0.55) 55%,
+      rgba(5, 11, 31, 0.92) 100%);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 260ms ease, transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.team-card:hover .team-card__overlay,
+.team-card:focus-within .team-card__overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.team-card__world {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  background: var(--color-electric);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.team-card__caps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.team-card__caps li {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+  padding-left: 14px;
+  position: relative;
+}
+
+.team-card__caps li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-electric);
+}
+
+/* --- Card body (always visible) --- */
+.team-card__body {
+  padding: 20px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.team-card__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-slate-500);
+}
 
 .team-card__name {
-  font-size: 1.1rem;
+  font-size: 1.12rem;
   color: var(--color-ink-strong);
-  margin-bottom: 0.15rem;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .team-card__role {
@@ -1781,13 +1905,95 @@ section {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-electric);
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.4rem;
 }
 
 .team-card__bio {
   font-size: 0.9rem;
   color: var(--color-slate-500);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Touch fallback — no hover, so surface the world label as a corner tag */
+@media (hover: none) {
+  .team-card__overlay {
+    opacity: 1;
+    transform: none;
+    background: linear-gradient(180deg, rgba(5,11,31,0) 55%, rgba(5,11,31,0.85) 100%);
+  }
+  .team-card__caps { display: none; }
+  .team-card__world {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    align-self: auto;
+  }
+}
+
+/* --- The Chain (sub-band beneath the grid) --- */
+.team__chain {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-canvas-2);
+  padding: 2rem;
+}
+
+.team__chain-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+}
+
+.team__chain-header h3 {
+  font-size: 1.35rem;
+  color: var(--color-ink-strong);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.team__chain-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) { .team__chain-steps { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .team__chain-steps { grid-template-columns: 1fr; } }
+
+.team__chain-steps li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 0.75rem 0 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.team__chain-steps li div {
+  font-size: 0.9rem;
   line-height: 1.55;
+  color: var(--color-slate-500);
+}
+
+.team__chain-steps li strong {
+  color: var(--color-ink-strong);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.team__chain-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-electric);
+  flex: none;
+  padding-top: 2px;
 }
 
 /* ---------- Statement ---------- */

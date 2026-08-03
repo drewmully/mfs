@@ -214,12 +214,9 @@ def main() -> None:
         ),
         Subject(
             name="joe",
-            src="https://cdn.shopify.com/s/files/1/0561/0530/4256/files/Joe.png?v=1772053276",
-            y_bias=0.04,
+            src=str(ROOT / "assets/images/joe-original.jpg"),
+            y_bias=0.03,
             scale=1.0,
-            # Source photo has an adjacent person on the left. Crop them out before
-            # feeding into rembg so their hair isn't retained.
-            pre_crop=(0.22, 0.05, 0.05, 0.0),
         ),
         Subject(
             name="dakarai",

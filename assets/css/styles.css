@@ -1796,14 +1796,14 @@ section {
   display: block;
   transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1),
               filter 400ms ease;
-  /* Subtle desaturation at rest for editorial cohesion; snaps back on hover */
-  filter: saturate(0.9) contrast(1.02);
+  /* Editorial B&W at rest; color returns on hover */
+  filter: grayscale(1) contrast(1.02);
 }
 
 .team-card:hover .team-card__photo img,
 .team-card:focus-within .team-card__photo img {
   transform: scale(1.045);
-  filter: saturate(1) contrast(1.02);
+  filter: grayscale(0) contrast(1.02);
 }
 
 /* --- Hover overlay: world label + capability chips --- */
